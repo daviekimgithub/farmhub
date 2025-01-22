@@ -1,5 +1,6 @@
 package com.ernestgichiri.farmhub.data.api
 
+import com.ernestgichiri.farmhub.data.dto.Category
 import com.ernestgichiri.farmhub.data.dto.Product
 import com.ernestgichiri.farmhub.data.dto.Products
 import retrofit2.http.GET
@@ -14,7 +15,7 @@ interface ApiService {
     @GET("products/{id}")
     suspend fun getSingleProductByIdFromApi(@Path("id") productId: Int): Product
     @GET("products/categories")
-    suspend fun getAllCategoriesListFromApi(): List<String>
+    suspend fun getAllCategoriesListFromApi(): List<Category>
     @GET("products/category/{categoryName}")
     suspend fun getProductsListByCategoryNameFromApi(@Path("categoryName") categoryName: String): Products
 }

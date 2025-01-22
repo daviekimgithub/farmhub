@@ -6,9 +6,11 @@ import com.ernestgichiri.farmhub.domain.mapper.ProductBaseMapper
 import com.ernestgichiri.farmhub.domain.mapper.ProductListMapper
 import com.ernestgichiri.farmhub.domain.repository.RemoteRepository
 import com.ernestgichiri.farmhub.common.NetworkResponseState
+import com.ernestgichiri.farmhub.data.dto.Category
 import com.ernestgichiri.farmhub.data.dto.Product
 import com.ernestgichiri.farmhub.data.source.remote.RemoteDataSource
 import com.ernestgichiri.farmhub.di.coroutine.IoDispatcher
+import com.mustafaunlu.ecommerce_compose.domain.entity.category.CategoryEntity
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
@@ -21,6 +23,7 @@ class RemoteRepositoryImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
     private val allProductsMapper: ProductListMapper<Product, ProductEntity>,
     private val singleProductMapper: ProductBaseMapper<Product, DetailProductEntity>,
+    private val allCategoryMapper: ProductListMapper<Category, CategoryEntity>,
 ) : RemoteRepository {
     override fun getProductsListFromApi(): Flow<NetworkResponseState<List<ProductEntity>>> {
         return remoteDataSource.getProductsListFromApi().map {
@@ -56,7 +59,7 @@ class RemoteRepositoryImpl @Inject constructor(
         return remoteDataSource.getAllCategoriesListFromApi().map {
             when (it) {
                 is NetworkResponseState.Loading -> NetworkResponseState.Loading
-                is NetworkResponseState.Success -> NetworkResponseState.Success(it.result)
+                is NetworkResponseState.Success -> NetworkResponseState.Success(allCategoryMapper.map(it.result).map { it.name })
                 is NetworkResponseState.Error -> NetworkResponseState.Error(it.exception)
             }
         }.flowOn(ioDispatcher)

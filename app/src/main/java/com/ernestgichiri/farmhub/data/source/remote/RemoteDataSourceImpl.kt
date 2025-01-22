@@ -2,6 +2,7 @@ package com.ernestgichiri.farmhub.data.source.remote
 
 import com.ernestgichiri.farmhub.common.NetworkResponseState
 import com.ernestgichiri.farmhub.data.api.ApiService
+import com.ernestgichiri.farmhub.data.dto.Category
 import com.ernestgichiri.farmhub.data.dto.Product
 import com.ernestgichiri.farmhub.data.dto.Products
 import kotlinx.coroutines.flow.Flow
@@ -47,7 +48,7 @@ class RemoteDataSourceImpl @Inject constructor(
         }
     }
 
-    override fun getAllCategoriesListFromApi(): Flow<NetworkResponseState<List<String>>> {
+    override fun getAllCategoriesListFromApi(): Flow<NetworkResponseState<List<Category>>> {
         return flow {
             emit(NetworkResponseState.Loading)
             try {

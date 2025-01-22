@@ -1,4 +1,4 @@
-fpackage com.ernestgichiri.farmhub.common
+package com.ernestgichiri.farmhub.common
 
 sealed class ScreenState<out T : Any> {
     object Loading : ScreenState<Nothing>()

@@ -1,6 +1,6 @@
-package com.mustafaunlu.ecommerce_compose.data.mapper
+package com.ernestgichiri.farmhub.data.mapper
 
-import com.mustafaunlu.ecommerce_compose.data.dto.Category
+import com.ernestgichiri.farmhub.data.dto.Category
 import com.ernestgichiri.farmhub.domain.mapper.ProductListMapper
 import javax.inject.Inject
 
