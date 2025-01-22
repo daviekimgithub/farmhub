@@ -1,5 +1,6 @@
 package com.ernestgichiri.farmhub.ui.screens.home
 
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -40,9 +41,16 @@ class HomeViewModel @Inject constructor(
     private fun getAllProducts() {
         getAllProductsUseCase().onEach {
             when (it) {
-                is NetworkResponseState.Error -> _products.postValue(ScreenState.Error(it.exception.message!!))
+                is NetworkResponseState.Error -> {
+                    _products.postValue(ScreenState.Error(it.exception.message!!))
+                    Log.e("data", it.exception.toString())
+                    Log.e("data", it.exception.message.toString())
+                }
                 is NetworkResponseState.Loading -> _products.postValue(ScreenState.Loading)
-                is NetworkResponseState.Success -> _products.postValue(ScreenState.Success(mapper.map(it.result)))
+                is NetworkResponseState.Success -> {
+                    _products.postValue(ScreenState.Success(mapper.map(it.result)))
+                    Log.e("data", it.result.toString())
+                }
             }
         }.launchIn(viewModelScope)
     }

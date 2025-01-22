@@ -26,7 +26,7 @@ abstract class MapperModule {
 
     @Binds
     @ViewModelScoped
-    abstract fun bindAllCategoriesEntityMapper(productEntityMapper: CategoryEntityMapper): ProductListMapper<Category, CategoryEntity>
+    abstract fun bindAllCategoriesEntityMapper(productEntityMapper: CategoryEntityMapper): ProductListMapper<Category, String>
 
     @Binds
     @ViewModelScoped

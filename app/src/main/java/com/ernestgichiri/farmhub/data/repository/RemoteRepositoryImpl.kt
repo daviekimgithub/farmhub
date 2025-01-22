@@ -23,7 +23,7 @@ class RemoteRepositoryImpl @Inject constructor(
     @IoDispatcher private val ioDispatcher: CoroutineDispatcher = Dispatchers.IO,
     private val allProductsMapper: ProductListMapper<Product, ProductEntity>,
     private val singleProductMapper: ProductBaseMapper<Product, DetailProductEntity>,
-    private val allCategoryMapper: ProductListMapper<Category, CategoryEntity>,
+    private val allCategoryMapper: ProductListMapper<Category, String>,
 ) : RemoteRepository {
     override fun getProductsListFromApi(): Flow<NetworkResponseState<List<ProductEntity>>> {
         return remoteDataSource.getProductsListFromApi().map {
@@ -59,7 +59,7 @@ class RemoteRepositoryImpl @Inject constructor(
         return remoteDataSource.getAllCategoriesListFromApi().map {
             when (it) {
                 is NetworkResponseState.Loading -> NetworkResponseState.Loading
-                is NetworkResponseState.Success -> NetworkResponseState.Success(allCategoryMapper.map(it.result).map { it.name })
+                is NetworkResponseState.Success -> NetworkResponseState.Success(allCategoryMapper.map(it.result))
                 is NetworkResponseState.Error -> NetworkResponseState.Error(it.exception)
             }
         }.flowOn(ioDispatcher)
