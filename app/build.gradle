@@ -8,11 +8,11 @@ plugins {
 }
 
 android {
-    namespace 'com.mustafaunlu.ecommerce_compose'
+    namespace 'com.ernestgichiri.farmhub'
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.mustafaunlu.ecommerce_compose"
+        applicationId "com.ernestgichiri.farmhub"
         minSdk 24
         targetSdk 31
         versionCode 1
