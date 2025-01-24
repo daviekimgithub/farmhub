@@ -3,11 +3,14 @@ package com.ernestgichiri.farmhub.domain.repository
 import com.ernestgichiri.farmhub.common.NetworkResponseState
 import com.ernestgichiri.farmhub.domain.entity.cart.UserCartEntity
 import com.ernestgichiri.farmhub.domain.entity.product.FavoriteProductEntity
+import com.ernestgichiri.farmhub.domain.entity.product.ProductEntity
 import kotlinx.coroutines.flow.Flow
 
 interface LocalRepository {
 
     suspend fun getCartsByUserIdFromDb(userId: String): Flow<NetworkResponseState<List<UserCartEntity>>>
+
+    suspend fun getProductsListFromLocalJson(): Flow<NetworkResponseState<List<ProductEntity>>>
 
     suspend fun insertUserCartToDb(userCartEntity: UserCartEntity)
 

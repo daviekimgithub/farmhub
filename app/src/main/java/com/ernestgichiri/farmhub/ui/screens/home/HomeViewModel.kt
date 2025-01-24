@@ -17,6 +17,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import javax.inject.Inject
 
 @HiltViewModel
@@ -35,10 +36,12 @@ class HomeViewModel @Inject constructor(
 
     init {
         getAllCategory()
-        getAllProducts()
+        runBlocking {
+            getAllProducts()
+        }
     }
 
-    private fun getAllProducts() {
+    private suspend fun getAllProducts() {
         getAllProductsUseCase().onEach {
             when (it) {
                 is NetworkResponseState.Error -> {
