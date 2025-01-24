@@ -130,7 +130,7 @@ fun PreviewProductItem() {
             title = "Product 1",
             description = "Product 1 description",
             rating = 4.5,
-            price = "$10",
+            price = 1000.00,
             imageUrl = "imageString",
         ),
         onProductClicked = {},

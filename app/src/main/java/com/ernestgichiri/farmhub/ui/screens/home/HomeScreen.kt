@@ -109,42 +109,6 @@ fun SuccessScreen(
     var active by remember { mutableStateOf(false) }
     var searchQueryState = searchQuery
     Column(modifier = modifier) {
-        androidx.compose.material3.SearchBar(
-            modifier = Modifier.fillMaxWidth().heightIn(min = 56.dp).padding(10.dp),
-            query = searchQueryState,
-            onQueryChange = onSearchTextChanged,
-            onSearch = {
-                active = false
-            },
-            active = active,
-            onActiveChange = { active = it },
-            leadingIcon = {
-                Icon(imageVector = Icons.Filled.Search, contentDescription = null)
-            },
-            trailingIcon = {
-                if (active) {
-                    Icon(
-                        modifier = Modifier.clickable {
-                            if (searchQueryState.isNotEmpty()) {
-                                searchQueryState = ""
-                                onSearchTextChanged("")
-                            } else {
-                                active = false
-                            }
-                        },
-                        imageVector = Icons.Filled.Close,
-                        contentDescription = null,
-                    )
-                }
-            },
-            placeholder = { Text(text = stringResource(id = R.string.search_hint)) },
-        ) {
-        }
-        CategoryList(
-            categories = categoryUiData,
-            onCategoryClicked = onCategoryClicked,
-        )
-
         ProductList(
             products = productUiData,
             onProductClicked = onProductClicked,

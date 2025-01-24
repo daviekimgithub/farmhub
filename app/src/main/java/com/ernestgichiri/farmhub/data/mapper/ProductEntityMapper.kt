@@ -13,7 +13,7 @@ class ProductEntityMapper @Inject constructor() :
                 id = it.id,
                 title = it.title,
                 description = it.description,
-                price = it.price.toString(),
+                price = it.price * 100,
                 imageUrl = it.images[0],
                 rating = it.rating,
             )
