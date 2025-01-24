@@ -149,7 +149,7 @@ fun SuccessScreen(
             )
 
             Text(
-                text = "Ksh ${uiData.price} K",
+                text = "Ksh ${uiData.price * 100}",
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(vertical = 8.dp),

@@ -42,7 +42,7 @@
     <string name="profile_picture_content_desc">Profile Picture</string>
     <string name="no_internet_connection_dialog">Internet connection is not available. Would you like to go to settings and enable it?</string>
     <string name="title_activity_splash">SplashActivity</string>
-    <string name="splash_txt">Shop Smart, Shop Easy, Shop with Us!</string>
+    <string name="splash_txt">Farm Hub, Shop Smart, Shop Easy, Shop with Us!</string>
     <string name="total_price_format">"Total Price: "</string>
     <string name="switch_theme_txt">Switch Theme</string>
     <string name="sign_up_success">Created account successfully!</string>
