@@ -47,10 +47,12 @@ fun SignInRoute(
     onGoSignUpButtonClicked: () -> Unit,
     navigateToHomeScreen: () -> Unit,
 ) {
-    val firebaseLoginState by viewModel.firebaseLoginState.observeAsState(initial = ScreenState.Loading)
-    val onSignInButtonClicked = { user: FirebaseSignInUserEntity ->
-        viewModel.loginWithFirebase(user)
+    val firebaseLoginState by viewModel.userData.observeAsState(initial = ScreenState.Loading)
+
+    val onSignInButtonClicked: (FirebaseSignInUserEntity) -> Unit = { user ->
+        viewModel.loginWithLocalRoom(user.email, user.password)
     }
+
     SignInScreen(
         onGoSignUpButtonClicked = onGoSignUpButtonClicked,
         onSignInButtonClicked = onSignInButtonClicked,
@@ -61,11 +63,11 @@ fun SignInRoute(
             navigateToHomeScreen()
         }
         ScreenState.Loading -> {
-            // Loading()
+            // Show a loading indicator if needed
         }
-
         is ScreenState.Error -> {
-            Error(message = (firebaseLoginState as ScreenState.Error).message)
+            val errorMessage = (firebaseLoginState as ScreenState.Error).message
+            Error(message = errorMessage)
         }
     }
 }

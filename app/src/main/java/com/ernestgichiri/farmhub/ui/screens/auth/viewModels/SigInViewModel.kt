@@ -7,46 +7,39 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.ernestgichiri.farmhub.common.Constants.PREF_FIREBASE_USERID_KEY
 import com.ernestgichiri.farmhub.common.ScreenState
-import com.ernestgichiri.farmhub.domain.entity.user.FirebaseSignInUserEntity
 import com.ernestgichiri.farmhub.domain.entity.user.UserInformationEntity
-import com.ernestgichiri.farmhub.domain.mapper.ProductBaseMapper
-import com.ernestgichiri.farmhub.domain.usecase.user.sign_in.FirebaseUserSingInUseCase
-import com.ernestgichiri.farmhub.ui.uiData.UserInformationUiData
+import com.ernestgichiri.farmhub.domain.usecase.user.sign_in.LocalRoomUserSignInUseCaseImpl
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
 class SigInViewModel @Inject constructor(
-    private val firebaseUserSingInUseCase: FirebaseUserSingInUseCase,
-    private val firebaseUserInfoToUiData: ProductBaseMapper<UserInformationEntity, UserInformationUiData>,
+    private val localRoomUserSignInUseCase: LocalRoomUserSignInUseCaseImpl,  // Only Local Room Sign-In
     private val sharedPreferences: SharedPreferences,
 ) : ViewModel() {
 
-    private val _firebaseLoginState = MutableLiveData<ScreenState<UserInformationUiData>>()
-    val firebaseLoginState: LiveData<ScreenState<UserInformationUiData>> get() = _firebaseLoginState
+    private val _userData = MutableLiveData<ScreenState<UserInformationEntity>>()
+    val userData: LiveData<ScreenState<UserInformationEntity>> get() = _userData
 
-    fun loginWithFirebase(user: FirebaseSignInUserEntity) {
+    /** Login via Local Room Database */
+    fun loginWithLocalRoom(userEmail: String, password: String) {
         viewModelScope.launch {
-            _firebaseLoginState.postValue(ScreenState.Loading)
-            firebaseUserSingInUseCase.invoke(
-                user,
-                onSuccess = {
-                    _firebaseLoginState.postValue(
-                        ScreenState.Success(
-                            firebaseUserInfoToUiData.map(
-                                it,
-                            ),
-                        ),
-                    )
-                    saveUserIdToSharedPref(it.id)
+            _userData.postValue(ScreenState.Loading)
+            localRoomUserSignInUseCase.invoke(
+                userEmail, password,
+                onSuccess = { userInfo ->
+                    _userData.postValue(ScreenState.Success(userInfo))
+                    saveUserIdToSharedPref(userInfo.id)
                 },
-            ) {
-                _firebaseLoginState.postValue(ScreenState.Error(it))
-            }
+                onFailure = { errorMsg ->
+                    _userData.postValue(ScreenState.Error(errorMsg))
+                }
+            )
         }
     }
 
+    /** Save authenticated user ID to SharedPreferences */
     private fun saveUserIdToSharedPref(id: String) {
         sharedPreferences.edit()
             .putString(PREF_FIREBASE_USERID_KEY, id)

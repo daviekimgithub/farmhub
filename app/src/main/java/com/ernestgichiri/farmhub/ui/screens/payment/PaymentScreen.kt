@@ -128,7 +128,7 @@ fun PaymentScreen() {
                 .fillMaxWidth()
                 .padding(top = 16.dp),
         ) {
-            Text(text = "Pay Now")
+            Text(text = "Pay With Credit Card")
         }
 
         Button(

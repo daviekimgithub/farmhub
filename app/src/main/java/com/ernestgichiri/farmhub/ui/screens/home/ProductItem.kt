@@ -88,7 +88,7 @@ fun ProductItem(
             )
 
             Text(
-                text = "Ksh ${product.price}K",
+                text = "Ksh ${product.price}",
                 style = TextStyle(
                     fontWeight = FontWeight.Bold,
                     fontSize = 14.sp,

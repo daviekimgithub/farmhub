@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import com.ernestgichiri.farmhub.common.ScreenState
 import com.ernestgichiri.farmhub.domain.entity.user.UserInformationEntity
 import com.ernestgichiri.farmhub.domain.mapper.ProductBaseMapper
-import com.ernestgichiri.farmhub.domain.usecase.user.read_user.ReadFirebaseUserInfosUseCase
+import com.ernestgichiri.farmhub.domain.usecase.user.read_user.ReadLocalRoomUserInfoUseCase
 import com.ernestgichiri.farmhub.ui.uiData.UserInformationUiData
 import com.ernestgichiri.farmhub.utils.getUserIdFromSharedPref
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,28 +17,36 @@ import javax.inject.Inject
 
 @HiltViewModel
 class ProfileViewModel @Inject constructor(
-    private val readFirebaseUserInfosUseCase: ReadFirebaseUserInfosUseCase,
+    private val readLocalRoomUserInfoUseCase: ReadLocalRoomUserInfoUseCase,  // ✅ Use Local DB instead of Firebase
     private val sharedPreferences: SharedPreferences,
-    private val firebaseUserInfoToUiData: ProductBaseMapper<UserInformationEntity, UserInformationUiData>,
+    private val userInfoToUiData: ProductBaseMapper<UserInformationEntity, UserInformationUiData>,
 ) : ViewModel() {
+
     private val _userInfos = MutableLiveData<ScreenState<UserInformationUiData>>()
     val userInfos: LiveData<ScreenState<UserInformationUiData>> get() = _userInfos
 
     init {
-        getUserInfosFromFirebase()
+        getUserInfosFromLocalDatabase()
     }
 
-    private fun getUserInfosFromFirebase() {
+    private fun getUserInfosFromLocalDatabase() {
         _userInfos.value = ScreenState.Loading
+        val userEmail = getUserIdFromSharedPref(sharedPreferences)  // ✅ Get stored email
+        if (userEmail.isNullOrEmpty()) {
+            _userInfos.postValue(ScreenState.Error("User email not found"))
+            return
+        }
+
         viewModelScope.launch {
-            readFirebaseUserInfosUseCase.invoke(
-                getUserIdFromSharedPref(sharedPreferences),
-                onSuccess = {
-                    _userInfos.postValue(ScreenState.Success(firebaseUserInfoToUiData.map(it)))
+            readLocalRoomUserInfoUseCase.invoke(
+                userEmail,
+                onSuccess = { userInfo ->
+                    _userInfos.postValue(ScreenState.Success(userInfoToUiData.map(userInfo)))
                 },
-            ) {
-                _userInfos.postValue(ScreenState.Error(it))
-            }
+                onFailure = { errorMsg ->
+                    _userInfos.postValue(ScreenState.Error(errorMsg))
+                }
+            )
         }
     }
 }

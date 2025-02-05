@@ -9,6 +9,7 @@ import com.ernestgichiri.farmhub.domain.mapper.ProductBaseMapper
 import com.ernestgichiri.farmhub.domain.usecase.user.sign_up.FirebaseUserSignUpUseCase
 import com.ernestgichiri.farmhub.domain.usecase.user.write_user.WriteFirebaseUserInfosUseCase
 import com.ernestgichiri.farmhub.common.ScreenState
+import com.ernestgichiri.farmhub.domain.usecase.user.write_user.WriteLocalRoomUserInfoUseCase
 import com.ernestgichiri.farmhub.ui.uiData.UserInformationUiData
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
@@ -16,8 +17,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class SignUpViewModel @Inject constructor(
-    private val signUpUseCase: FirebaseUserSignUpUseCase,
-    private val writeFirebaseUserInfosUseCase: WriteFirebaseUserInfosUseCase,
+    private val writeLocalRoomUserInfoUseCase: WriteLocalRoomUserInfoUseCase,
     private val userInfoToEntity: ProductBaseMapper<UserInformationUiData, UserInformationEntity>,
 ) : ViewModel() {
     private val _signUp = MutableLiveData<ScreenState<UserInformationUiData>>()
@@ -26,7 +26,7 @@ class SignUpViewModel @Inject constructor(
     fun signUp(user: UserInformationUiData) {
         _signUp.value = ScreenState.Loading
         viewModelScope.launch {
-            signUpUseCase.invoke(
+            writeLocalRoomUserInfoUseCase.invoke(
                 userInfoToEntity.map(user),
                 onSuccess = {
                     _signUp.postValue(ScreenState.Success(user))
@@ -40,7 +40,7 @@ class SignUpViewModel @Inject constructor(
 
     private fun writeUserToFirebaseDatabase(user: UserInformationEntity) {
         viewModelScope.launch {
-            writeFirebaseUserInfosUseCase.invoke(
+            writeLocalRoomUserInfoUseCase.invoke(
                 user,
                 onSuccess = {},
             ) {
