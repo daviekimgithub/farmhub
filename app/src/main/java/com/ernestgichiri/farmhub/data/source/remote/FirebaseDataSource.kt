@@ -1,6 +1,6 @@
 package com.ernestgichiri.farmhub.data.source.remote
 
-import com.ernestgichiri.farmhub.domain.entity.user.FirebaseSignInUserEntity
+import com.ernestgichiri.farmhub.domain.entity.user.SignInUserEntity
 import com.ernestgichiri.farmhub.domain.entity.user.UserInformationEntity
 
 interface FirebaseDataSource {
@@ -11,7 +11,7 @@ interface FirebaseDataSource {
     )
 
     fun signInWithFirebase(
-        user: FirebaseSignInUserEntity,
+        user: SignInUserEntity,
         onSuccess: (UserInformationEntity) -> Unit,
         onFailure: (String) -> Unit,
     )

@@ -70,9 +70,9 @@ fun App(
         modifier = modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
     ) {
-        if (!appState.isOnline) {
-            OfflineDialog(onRetry = appState::refreshOnline)
-        } else {
+//        if (!appState.isOnline) {
+//            OfflineDialog(onRetry = appState::refreshOnline)
+//        } else {
             val navController = rememberNavController()
             val bottomBarState = rememberSaveable { (mutableStateOf(false)) }
             val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -98,7 +98,7 @@ fun App(
                     onBadgeCountChange = onBadgeCountChange,
                 )
             }
-        }
+//        }
     }
 }
 
@@ -133,15 +133,16 @@ class EcommerceAppState(
     }
 
     private fun checkIfOnline(): Boolean {
-        val cm = getSystemService(context, ConnectivityManager::class.java)
-
-        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            val capabilities = cm?.getNetworkCapabilities(cm.activeNetwork) ?: return false
-            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
-                    capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
-        } else {
-            cm?.activeNetworkInfo?.isConnectedOrConnecting == true
-        }
+//        val cm = getSystemService(context, ConnectivityManager::class.java)
+//
+//        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+//            val capabilities = cm?.getNetworkCapabilities(cm.activeNetwork) ?: return false
+//            capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_INTERNET) &&
+//                    capabilities.hasCapability(NetworkCapabilities.NET_CAPABILITY_VALIDATED)
+//        } else {
+//            cm?.activeNetworkInfo?.isConnectedOrConnecting == true
+//        }
+        return true;
     }
 }
 

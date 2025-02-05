@@ -53,4 +53,6 @@ interface LocalRepository {
         onSuccess: (UserInformationEntity) -> Unit,
         onFailure: (String) -> Unit
     )
+
+    suspend fun getProductsListFromLocalJsonById(productId: Int): Flow<NetworkResponseState<ProductEntity>>
 }

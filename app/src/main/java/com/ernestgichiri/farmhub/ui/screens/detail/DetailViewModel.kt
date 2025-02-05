@@ -15,6 +15,7 @@ import com.ernestgichiri.farmhub.domain.mapper.ProductBaseMapper
 import com.ernestgichiri.farmhub.domain.usecase.cart.CartUseCase
 import com.ernestgichiri.farmhub.domain.usecase.favorite.FavoriteUseCase
 import com.ernestgichiri.farmhub.domain.usecase.product.GetSingleProductUseCase
+import com.ernestgichiri.farmhub.ui.mapper.ProductEntityToDetailMapper
 import com.ernestgichiri.farmhub.ui.uiData.DetailProductUiData
 import com.ernestgichiri.farmhub.utils.getUserIdFromSharedPref
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -30,6 +31,7 @@ class DetailViewModel @Inject constructor(
     private val cartToFavoriteUiMapper: ProductBaseMapper<UserCartEntity, FavoriteProductEntity>,
     private val savedStateHandle: SavedStateHandle,
     private val sharedPreferences: SharedPreferences,
+    private val pmapper: ProductEntityToDetailMapper
 ) : ViewModel() {
     private val _product = MutableLiveData<ScreenState<DetailProductUiData>>()
     val product: LiveData<ScreenState<DetailProductUiData>> get() = _product
@@ -48,7 +50,7 @@ class DetailViewModel @Inject constructor(
                         is NetworkResponseState.Success -> _product.postValue(
                             ScreenState.Success(
                                 mapper.map(
-                                    it.result,
+                                    pmapper.map(it.result),
                                 ),
                             ),
                         )

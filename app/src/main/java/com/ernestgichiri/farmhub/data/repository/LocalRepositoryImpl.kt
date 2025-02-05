@@ -35,6 +35,11 @@ class LocalRepositoryImpl @Inject constructor(
         return jsonDataLoader.loadProductEntities()
     }
 
+    override suspend fun getProductsListFromLocalJsonById(productId: Int): Flow<NetworkResponseState<ProductEntity>> {
+        val jsonDataLoader = JsonDataLoader()
+        return jsonDataLoader.loadProductEntityById(productId)
+    }
+
     override suspend fun insertUserCartToDb(userCartEntity: UserCartEntity) {
         withContext(ioDispatcher) {
             localDataSource.insertUserCartToDb(userCartEntity)

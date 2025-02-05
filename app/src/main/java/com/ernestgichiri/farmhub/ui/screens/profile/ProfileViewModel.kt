@@ -5,6 +5,12 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.ernestgichiri.farmhub.common.Constants.EMAIL
+import com.ernestgichiri.farmhub.common.Constants.NAME
+import com.ernestgichiri.farmhub.common.Constants.PASSWORD
+import com.ernestgichiri.farmhub.common.Constants.PHONE
+import com.ernestgichiri.farmhub.common.Constants.PREF_USERID_KEY
+import com.ernestgichiri.farmhub.common.Constants.SURNAME
 import com.ernestgichiri.farmhub.common.ScreenState
 import com.ernestgichiri.farmhub.domain.entity.user.UserInformationEntity
 import com.ernestgichiri.farmhub.domain.mapper.ProductBaseMapper
@@ -31,22 +37,35 @@ class ProfileViewModel @Inject constructor(
 
     private fun getUserInfosFromLocalDatabase() {
         _userInfos.value = ScreenState.Loading
-        val userEmail = getUserIdFromSharedPref(sharedPreferences)  // ✅ Get stored email
-        if (userEmail.isNullOrEmpty()) {
-            _userInfos.postValue(ScreenState.Error("User email not found"))
-            return
+        val user = getUserFromSharedPref(sharedPreferences)
+        if (user != null){
+            _userInfos.postValue(ScreenState.Success(userInfoToUiData.map(user)))
+        } else {
+            _userInfos.postValue(ScreenState.Error("Failed to get user from DB"))
         }
+    }
 
-        viewModelScope.launch {
-            readLocalRoomUserInfoUseCase.invoke(
-                userEmail,
-                onSuccess = { userInfo ->
-                    _userInfos.postValue(ScreenState.Success(userInfoToUiData.map(userInfo)))
-                },
-                onFailure = { errorMsg ->
-                    _userInfos.postValue(ScreenState.Error(errorMsg))
-                }
+    private fun getUserFromSharedPref(sharedPreferences: SharedPreferences): UserInformationEntity? {
+        val id = sharedPreferences.getString(PREF_USERID_KEY, null)
+        val email = sharedPreferences.getString(EMAIL, null)
+        val name = sharedPreferences.getString(NAME, null)
+        val password = sharedPreferences.getString(PASSWORD, null)
+        val phone = sharedPreferences.getString(PHONE, null)
+        val surname = sharedPreferences.getString(SURNAME, null)
+
+        return if (id != null && email != null && name != null && password != null && phone != null && surname != null) {
+            UserInformationEntity(
+                id = id,
+                name = name,
+                password = password,
+                phone = phone,
+                surname = surname,
+                email = email,
+                image = "",
+                token = ""
             )
+        } else {
+            null // Return null if any required field is missing
         }
     }
 }

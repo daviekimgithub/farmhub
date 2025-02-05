@@ -23,8 +23,6 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getAllProductsUseCase: GetAllProductsUseCase,
-    private val categoryUseCase: CategoryUseCase,
-    private val searchProductUseCase: SearchProductUseCase,
     private val mapper: ProductListMapper<ProductEntity, ProductUiData>,
 ) :
     ViewModel() {
@@ -35,7 +33,6 @@ class HomeViewModel @Inject constructor(
     val categories: LiveData<ScreenState<List<String>>> get() = _categories
 
     init {
-        getAllCategory()
         runBlocking {
             getAllProducts()
         }
@@ -54,38 +51,6 @@ class HomeViewModel @Inject constructor(
                     _products.postValue(ScreenState.Success(mapper.map(it.result)))
                     Log.e("data", it.result.toString())
                 }
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    fun searchProduct(query: String) {
-        viewModelScope.launch {
-            searchProductUseCase(query).onEach {
-                when (it) {
-                    is NetworkResponseState.Error -> _products.postValue(ScreenState.Error(it.exception.message!!))
-                    is NetworkResponseState.Loading -> _products.postValue(ScreenState.Loading)
-                    is NetworkResponseState.Success -> _products.postValue(ScreenState.Success(mapper.map(it.result)))
-                }
-            }.launchIn(viewModelScope)
-        }
-    }
-
-    private fun getAllCategory() {
-        categoryUseCase().onEach {
-            when (it) {
-                is NetworkResponseState.Error -> _categories.postValue(ScreenState.Error(it.exception.message!!))
-                is NetworkResponseState.Loading -> _categories.postValue(ScreenState.Loading)
-                is NetworkResponseState.Success -> _categories.postValue(ScreenState.Success(it.result))
-            }
-        }.launchIn(viewModelScope)
-    }
-
-    fun getProductsByCategory(categoryName: String) {
-        getAllProductsUseCase(categoryName).onEach {
-            when (it) {
-                is NetworkResponseState.Error -> _products.postValue(ScreenState.Error(it.exception.message!!))
-                is NetworkResponseState.Loading -> _products.postValue(ScreenState.Loading)
-                is NetworkResponseState.Success -> _products.postValue(ScreenState.Success(mapper.map(it.result)))
             }
         }.launchIn(viewModelScope)
     }

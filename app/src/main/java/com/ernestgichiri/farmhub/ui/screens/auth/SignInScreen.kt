@@ -36,7 +36,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.ernestgichiri.farmhub.R
 import com.ernestgichiri.farmhub.common.ScreenState
-import com.ernestgichiri.farmhub.domain.entity.user.FirebaseSignInUserEntity
+import com.ernestgichiri.farmhub.domain.entity.user.SignInUserEntity
 import com.ernestgichiri.farmhub.ui.Error
 import com.ernestgichiri.farmhub.ui.screens.auth.viewModels.SigInViewModel
 import kotlinx.coroutines.delay
@@ -47,9 +47,9 @@ fun SignInRoute(
     onGoSignUpButtonClicked: () -> Unit,
     navigateToHomeScreen: () -> Unit,
 ) {
-    val firebaseLoginState by viewModel.userData.observeAsState(initial = ScreenState.Loading)
+    val roomDBLoginState by viewModel.userData.observeAsState(initial = ScreenState.Loading)
 
-    val onSignInButtonClicked: (FirebaseSignInUserEntity) -> Unit = { user ->
+    val onSignInButtonClicked: (SignInUserEntity) -> Unit = { user ->
         viewModel.loginWithLocalRoom(user.email, user.password)
     }
 
@@ -58,7 +58,7 @@ fun SignInRoute(
         onSignInButtonClicked = onSignInButtonClicked,
     )
 
-    when (firebaseLoginState) {
+    when (roomDBLoginState) {
         is ScreenState.Success -> {
             navigateToHomeScreen()
         }
@@ -66,7 +66,7 @@ fun SignInRoute(
             // Show a loading indicator if needed
         }
         is ScreenState.Error -> {
-            val errorMessage = (firebaseLoginState as ScreenState.Error).message
+            val errorMessage = (roomDBLoginState as ScreenState.Error).message
             Error(message = errorMessage)
         }
     }
@@ -75,7 +75,7 @@ fun SignInRoute(
 @OptIn(ExperimentalComposeUiApi::class)
 @Composable
 fun SignInScreen(
-    onSignInButtonClicked: (FirebaseSignInUserEntity) -> Unit,
+    onSignInButtonClicked: (SignInUserEntity) -> Unit,
     onGoSignUpButtonClicked: () -> Unit,
 ) {
 
@@ -163,7 +163,7 @@ fun SignInScreen(
                     password.isNotEmpty()
                 ) {
                     onSignInButtonClicked(
-                        FirebaseSignInUserEntity(
+                        SignInUserEntity(
                             email = email,
                             password = password,
                         ),

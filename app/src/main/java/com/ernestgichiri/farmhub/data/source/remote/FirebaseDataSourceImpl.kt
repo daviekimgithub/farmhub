@@ -4,7 +4,7 @@ import android.net.Uri
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.firestore.FirebaseFirestore
-import com.ernestgichiri.farmhub.domain.entity.user.FirebaseSignInUserEntity
+import com.ernestgichiri.farmhub.domain.entity.user.SignInUserEntity
 import com.ernestgichiri.farmhub.domain.entity.user.UserInformationEntity
 import io.github.nefilim.kjwt.JWT
 import io.github.nefilim.kjwt.toJWTKeyID
@@ -31,7 +31,7 @@ class FirebaseDataSourceImpl @Inject constructor(
     }
 
     override fun signInWithFirebase(
-        user: FirebaseSignInUserEntity,
+        user: SignInUserEntity,
         onSuccess: (UserInformationEntity) -> Unit,
         onFailure: (String) -> Unit,
     ) {

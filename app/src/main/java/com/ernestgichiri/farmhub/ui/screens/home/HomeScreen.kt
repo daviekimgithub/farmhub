@@ -37,54 +37,31 @@ fun HomeRoute(
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     val productState by viewModel.products.observeAsState(initial = ScreenState.Loading)
-    val categoryState by viewModel.categories.observeAsState(initial = ScreenState.Loading)
-    val onCategoryClicked = { category: String ->
-        viewModel.getProductsByCategory(category)
-    }
-    var searchQuery by remember { mutableStateOf("") }
-    val onSearchTextChanged: (String) -> Unit = { newSearchQuery ->
-        searchQuery = newSearchQuery
-        if (newSearchQuery.isNotEmpty()) {
-            viewModel.searchProduct(newSearchQuery)
-        }
-    }
     HomeScreen(
         productState = productState,
-        categoryState = categoryState,
         onProductClicked = onProductClicked,
-        onCategoryClicked = onCategoryClicked,
-        onSearchTextChanged = onSearchTextChanged,
-        searchQuery = searchQuery,
     )
 }
 
 @Composable
 fun HomeScreen(
     productState: ScreenState<List<ProductUiData>>?,
-    categoryState: ScreenState<List<String>>,
     onProductClicked: (ProductUiData) -> Unit,
-    onCategoryClicked: (String) -> Unit,
-    onSearchTextChanged: (String) -> Unit,
-    searchQuery: String,
 ) {
     Box(modifier = Modifier.fillMaxSize()) {
         when {
-            productState is ScreenState.Success && categoryState is ScreenState.Success -> {
+            productState is ScreenState.Success -> {
                 SuccessScreen(
                     productUiData = productState.uiData,
-                    categoryUiData = categoryState.uiData,
-                    onCategoryClicked = onCategoryClicked,
                     onProductClicked = onProductClicked,
-                    onSearchTextChanged = onSearchTextChanged,
-                    searchQuery = searchQuery,
                 )
             }
 
-            productState is ScreenState.Error || categoryState is ScreenState.Error -> {
+            productState is ScreenState.Error -> {
                 Error(message = "Error")
             }
 
-            productState is ScreenState.Loading || categoryState is ScreenState.Loading -> {
+            productState is ScreenState.Loading -> {
                 Loading()
             }
 
@@ -100,14 +77,9 @@ fun HomeScreen(
 fun SuccessScreen(
     modifier: Modifier = Modifier,
     productUiData: List<ProductUiData>,
-    categoryUiData: List<String>,
     onProductClicked: (ProductUiData) -> Unit = {},
-    onCategoryClicked: (String) -> Unit,
-    onSearchTextChanged: (String) -> Unit,
-    searchQuery: String,
 ) {
     var active by remember { mutableStateOf(false) }
-    var searchQueryState = searchQuery
     Column(modifier = modifier) {
         ProductList(
             products = productUiData,

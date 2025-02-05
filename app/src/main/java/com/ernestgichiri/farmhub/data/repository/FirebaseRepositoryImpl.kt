@@ -1,6 +1,6 @@
 package com.ernestgichiri.farmhub.data.repository
 
-import com.ernestgichiri.farmhub.domain.entity.user.FirebaseSignInUserEntity
+import com.ernestgichiri.farmhub.domain.entity.user.SignInUserEntity
 import com.ernestgichiri.farmhub.domain.entity.user.UserInformationEntity
 import com.ernestgichiri.farmhub.domain.repository.FirebaseRepository
 import com.ernestgichiri.farmhub.common.TokenManager
@@ -20,7 +20,7 @@ class FirebaseRepositoryImpl @Inject constructor(
     }
 
     override fun signInWithFirebase(
-        user: FirebaseSignInUserEntity,
+        user: SignInUserEntity,
         onSuccess: (UserInformationEntity) -> Unit,
         onFailure: (String) -> Unit,
     ) {

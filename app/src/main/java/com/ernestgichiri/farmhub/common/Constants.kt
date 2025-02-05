@@ -1,10 +1,17 @@
 package com.ernestgichiri.farmhub.common
 
+import android.provider.ContactsContract.CommonDataKinds.Phone
+
 object Constants {
     const val PREF_SELECTED_IMAGE_URI = "PREF_SELECTED_IMAGE_URI"
     const val PREF_FILE_NAME = "userData"
     const val PREF_IS_APP_FIRST_OPEN = "isAppFirstTimeOpen"
-    const val PREF_FIREBASE_USERID_KEY = "SHARED_PREF_FIREBASE_USERID_KEY"
+    const val PREF_USERID_KEY = "SHARED_PREF_USERID_KEY"
+    const val EMAIL = "email"
+    const val PASSWORD = "password"
+    const val NAME = "name"
+    const val SURNAME = "surname"
+    const val PHONE = "phone"
     const val PREF_DEF_STR = ""
     const val PREF_THEME_KEY = "PREF_THEME_KEY"
     const val BASE_URL = "https://dummyjson.com/"

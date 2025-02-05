@@ -1,6 +1,6 @@
 package com.ernestgichiri.farmhub.domain.repository
 
-import com.ernestgichiri.farmhub.domain.entity.user.FirebaseSignInUserEntity
+import com.ernestgichiri.farmhub.domain.entity.user.SignInUserEntity
 import com.ernestgichiri.farmhub.domain.entity.user.UserInformationEntity
 
 interface FirebaseRepository {
@@ -11,7 +11,7 @@ interface FirebaseRepository {
     )
 
     fun signInWithFirebase(
-        user: FirebaseSignInUserEntity,
+        user: SignInUserEntity,
         onSuccess: (UserInformationEntity) -> Unit,
         onFailure: (String) -> Unit
     )
